@@ -1,0 +1,150 @@
+<WindowManager>:
+    id: _WindowManager
+    ExpiryDateWindow:
+        id: ExpiryDateWindow_id
+    ExpiryDateWindowWithList:
+        id: ExpiryDateWindowWithList_id
+
+<ExpiryDateWindow>
+    name: "ExpiryPage"
+    lot: lot
+    lot_show: lot_show
+    exp_show: exp_show
+
+    MDRelativeLayout:
+        md_bg_color: (240/255, 240/255, 240/255, 1)
+        MDLabel:
+            height: 25
+            size_hint: (100, None)
+            #size_hint_x: 100
+            md_bg_color: app.theme_cls.accent_color
+            pos_hint: {"top":1}
+
+        MDToolbar:
+            title: "Lot lookup tool"
+            elevation: 10
+            md_bg_color: app.theme_cls.primary_color
+            pos_hint: {"top":.99}
+            right_action_items: [["view-list-outline", lambda x: root.display_list_page()]]
+
+#Text input and search:
+        MDTextField:
+            id: lot
+            text: "B"
+            mode: "rectangle"
+            max_text_length: 7
+            multiline: False
+            pos_hint: {"x":0.075, "center_y":0.3}
+            size_hint: (0.5, 0.1)
+
+        MDRaisedButton:
+            text: "Search"
+            on_press:
+                #spinner.active = True
+                root.start_search_thread()
+            pos_hint: {"right":0.95, "center_y":0.3}
+            size_hint: (0.3, 0.1)
+
+#Show lot# and expiry date:
+        MDLabel:
+            id: lot_show
+            text: ""
+            pos_hint: {"x":0.075, "center_y":0.4}
+            size_hint: (0.5, 0.1)
+
+        MDLabel:
+            id: exp_show
+            text: ""
+            halign: "center"
+            pos_hint: {"right":0.95, "center_y":0.4}
+            size_hint: (0.3, 0.1)
+#loading button:
+        MDSpinner:
+            id: spinner
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: (0.15, 0.15)
+            color: app.theme_cls.accent_color
+            active: False
+
+<ExpiryDateWindowWithList>
+    name: "ExpiryPageWithList"
+    lot: lot
+    lot_show: lot_show
+    exp_show: exp_show
+
+    MDRelativeLayout:
+        md_bg_color: (240/255, 240/255, 240/255, 1)
+        MDLabel:
+            height: 25
+            size_hint: (100, None)
+            md_bg_color: app.theme_cls.accent_color
+            pos_hint: {"top":1}
+
+        MDToolbar:
+            title: "Lot lookup tool"
+            elevation: 10
+            md_bg_color: app.theme_cls.primary_color
+            pos_hint: {"top":.99}
+            right_action_items: [["view-list-outline", lambda x: root.display_expiry_page()]]
+
+#Text input and search:
+        MDTextField:
+            id: lot
+            text: "B"
+            mode: "rectangle"
+            max_text_length: 7
+            multiline: False
+            pos_hint: {"x":0.075, "center_y":0.3}
+            size_hint: (0.5, 0.1)
+
+        MDRaisedButton:
+            text: "Search"
+            on_press:
+                root.start_search_thread()
+            pos_hint: {"right":0.95, "center_y":0.3}
+            size_hint: (0.3, 0.1)
+
+#Show lot# and expiry date:
+        MDLabel:
+            id: lot_show
+            pos_hint: {"x":0.075, "center_y":0.4}
+            size_hint: (0.5, 0.1)
+
+        MDLabel:
+            id: exp_show
+            halign: "center"
+            pos_hint: {"right":0.95, "center_y":0.4}
+            size_hint: (0.3, 0.1)
+
+        MDCard:
+            size_hint: (0.9,0.4)
+            pos_hint: {"center_x":0.5, "center_y":0.65}
+            md_bg_color: app.theme_cls.primary_color
+            radius: [16, ]
+            MDBoxLayout:
+                orientation: "vertical"
+                size_hint_y: 0.95
+
+                ScrollView:
+                    scroll_timeout: 100
+                    MDList:
+                        id: md_list
+                        padding: 0
+
+<SwipeToDeleteItem>:
+    size_hint_y: None
+    height: content.height
+
+    MDCardSwipeLayerBox:
+        padding: 0.4
+        MDIconButton:
+            icon: "trash-can"
+            pos_hint: {"center_y": .5}
+            on_release: root.remove_item(root)
+
+    MDCardSwipeFrontBox:
+        TwoLineListItem:
+            id: content
+            text: root.text
+            secondary_text: root.secondary_text
+            _no_ripple_effect: True
